@@ -2,12 +2,14 @@
 import { AddIcon, PhoneIcon, Search2Icon } from "@chakra-ui/icons"
 import { Avatar, Box, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react"
 
+interface INavbar {
+    onOpen: () => void;
+}
 
-export const Navbar = () => {
+export const Navbar = ({ onOpen }: INavbar) => {
     return (
         <Box bgColor="secondary" px={10} py={4} boxShadow="xl"
             display="flex" justifyContent="space-between"
-            fontFamily="body"
         >
             <Box cursor="pointer">
                 <Text fontSize="2xl" color="primary" fontWeight="600">Blog App</Text>
@@ -25,7 +27,7 @@ export const Navbar = () => {
 
                 <Box bgColor="primary" w="45px" height="33px" borderRadius="50%"
                     display="flex" justifyContent="center" alignItems="center"
-                    cursor="pointer" boxShadow="xl"
+                    cursor="pointer" boxShadow="xl" onClick={ onOpen }
                 >
                     <AddIcon color="secondary" fontSize="15px" />
                 </Box>
