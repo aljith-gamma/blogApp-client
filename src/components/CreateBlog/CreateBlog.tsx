@@ -1,7 +1,8 @@
-import { Box, Button, FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, useDisclosure } from "@chakra-ui/react"
-import { ChangeEvent, FormEvent, useRef, useState } from "react"
+import { Box, Button, FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Text, Textarea, useDisclosure } from "@chakra-ui/react"
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 import toast, { Toaster } from 'react-hot-toast';
 import { SingleTag } from "./SingleTag";
+import { api } from "@/api/axios";
 
 interface ICreateBlog {
     isOpen: boolean;
@@ -9,19 +10,50 @@ interface ICreateBlog {
     onClose: () => void;
 }
 
+interface ICategory {
+    id: number;
+    category: string | number;
+}
+
+interface IBlogData {
+    title: string;
+    description: string;
+    categoryId: string;
+}
+
 export const CreateBlog = ({ isOpen, onOpen, onClose}: ICreateBlog) => {
     const [file, setFile] = useState<File | null>(null);
     const [tagText, setTagText] = useState('');
     const [tags, setTags] = useState<string[]>([]);
-    const [ blogData, setBlogData ] = useState({
+    const [ blogData, setBlogData ] = useState<IBlogData>({
         title: '',
-        description: ''
+        description: '',
+        categoryId: ''
     })
+    const [categories, setCategories] = useState<ICategory[]>([]);
 
     const initialRef = useRef(null);
 
+    useEffect(() => {
+        fetchCategories();
+    }, [])
+
+    const fetchCategories = async () => {
+        try {
+            const res: any = await api({
+                url: '/blog/categories',
+                method: 'GET'
+            })
+            if(res?.categories){
+                setCategories(res.categories);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     const imageFileHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setFile(e.currentTarget.files && e.currentTarget.files[0]);
+        setFile(e?.currentTarget?.files && e.currentTarget.files[0]);
     }
 
     const tagsHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +78,7 @@ export const CreateBlog = ({ isOpen, onOpen, onClose}: ICreateBlog) => {
         setTags(tagData);
     }
 
-    const blogDataHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const blogDataHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | ChangeEvent<HTMLSelectElement>) => {
         const name = e.target.name;
         const value = e.target.value;
         setBlogData({
@@ -57,9 +89,28 @@ export const CreateBlog = ({ isOpen, onOpen, onClose}: ICreateBlog) => {
 
     const submitFormHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(file);
-        console.log(blogData);
-        console.log(tags);
+        if(!file){
+            toast.error('Image field is mandatory!');
+            return;
+        }
+        try {
+            const formData = new FormData();
+            formData.append('title', blogData.title);
+            formData.append('description', blogData.description);
+            formData.append('categoryId', blogData.categoryId);
+            formData.append('tags', JSON.stringify(tags));
+            formData.append('file', file);
+
+            const response = await api({
+                url: '/blog/create',
+                method: 'POST',
+                data: formData
+            });
+            onClose();
+            // console.log(response);
+        } catch (err) {
+            console.log(err);
+        }
     }
   
     return (
@@ -69,39 +120,55 @@ export const CreateBlog = ({ isOpen, onOpen, onClose}: ICreateBlog) => {
           isOpen={isOpen}
           onClose={onClose}
         >
-            <Toaster />
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent maxW="700px" p={[0, 2, 6]} boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px"
+                borderRadius="2xl" mx={5}
+            >
                 <form onSubmit={ submitFormHandler }>
                     <ModalHeader>Create your blog</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6} display="flex" flexDir="column" gap={4}>
                         <FormControl>
                             <FormLabel>Title</FormLabel>
-                            <Input ref={initialRef} placeholder='Title' focusBorderColor="primary"
+                            <Input ref={initialRef} placeholder='Title' focusBorderColor="primary" required
                                 name="title" value={blogData.title} onChange={ blogDataHandler }
                             />
                         </FormControl>
 
-                        <FormControl>
-                            <FormLabel>Image</FormLabel>
-                            <Input placeholder='File' type="file" id="file" display="none" 
-                                onChange={ imageFileHandler } 
-                            />
-                            <label htmlFor="file" style={{ cursor: 'pointer'}}>
-                                <Box display="flex" alignItems="center" gap="10px">
-                                    <img src="./upload-img.png" alt="add image"
-                                        style={{ width: '30px'}}
-                                    />
-                                    <Text fontSize="14px">Add image</Text>
-                                    <Text>{ file?.name.substring(0, 15) }</Text>
-                                </Box>
-                            </label>
+                        <FormControl display="grid" gridTemplateColumns="1.5fr 1fr">
+                            <Box>
+                                <FormLabel>Image</FormLabel>
+                                <Input placeholder='File' type="file" id="file" display="none" 
+                                    onChange={ imageFileHandler } 
+                                />
+                                <label htmlFor="file" style={{ cursor: 'pointer'}}>
+                                    <Box display="flex" alignItems="center" gap="10px">
+                                        <img src="./upload-img.png" alt="add image"
+                                            style={{ width: '30px'}}
+                                        />
+                                        <Text fontSize="14px">Add image</Text>
+                                        {/* <Text>{ file?.name.substring(0, 15) }</Text> */}
+                                    </Box>
+                                </label>
+                            </Box>
+
+                            <Box>
+                                <FormLabel>Category</FormLabel>
+                                <Select variant='filled' placeholder='select..' name="categoryId" onChange={ blogDataHandler } required >
+                                    { categories[0] && (
+                                        categories.map(cat => {
+                                            return (
+                                                <option key={cat.id} value={cat.id}>{ cat.category }</option>
+                                            )
+                                        })
+                                    )}
+                                </Select>
+                            </Box>
                         </FormControl>
 
                         <FormControl mt={4}>
                             <FormLabel>Blog</FormLabel>
-                            <Textarea placeholder='Write you blog here...' focusBorderColor="primary"
+                            <Textarea placeholder='Write you blog here...' focusBorderColor="primary" required
                                 name="description" value={blogData.description} onChange={ blogDataHandler }
                             />
                         </FormControl>

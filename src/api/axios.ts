@@ -25,13 +25,17 @@ const handleError = (err: AxiosError) => {
 const handleSuccess = (res: AxiosResponse) => {
     const token = res?.data?.token;
     if(token) localStorage.setItem('token', token);
-    toast.success(res?.data?.message);
+    if(res?.data?.message) toast.success(res.data.message);
     return res.data;
 };
 
 api.interceptors.response.use(handleSuccess, handleError);
 
 api.interceptors.request.use((config) => {
+
+    if (config?.url?.includes('/blog')){
+        config.headers['Content-Type'] = 'multipart/form-data';
+    }
 
     const token = localStorage.getItem('token');
 
