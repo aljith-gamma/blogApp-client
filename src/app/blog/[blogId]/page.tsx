@@ -1,10 +1,11 @@
 "use client"
-import { api } from "@/api/axios";
+import { api } from "@/apis/axios";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { Avatar, Box, Container, Heading, Text } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { IBlogData } from '@/components/Blogs/Blog'
 import moment from "moment";
+import { fetchSingleBlog } from "@/apis/blog";
 
 const BlogPage = ({ params }: any) => {
     const { blogId } = params;
@@ -15,21 +16,13 @@ const BlogPage = ({ params }: any) => {
     }, [])
 
     const fetchBlog = async () => {
-        try {
-            const response: any = await api({
-                url: `/blog/getblog/${blogId}`,
-                method: 'GET'
-            })
-            setBlog(response?.blog);
-            console.log(response.blog);
-        } catch (err) {
-            console.log(err);
-        }
+        const blog: any = await fetchSingleBlog(blogId);
+        setBlog(blog);
     }
     return (
-        <Box bgColor="primary" minH="100vh">
+        <Box minH="100vh">
             <Navbar flag={ false } />
-            <Box w={["90%", "70%", "70%", "50%"]} mx="auto" py={4} display="flex" flexDir="column" gap={6}>
+            <Box w={["90%", "70%", "70%", "60%"]} mx="auto" py={8} display="flex" flexDir="column" gap={6}>
 
                 <Box display="flex" alignItems="center" gap={4}>
                     <Box>
@@ -41,7 +34,7 @@ const BlogPage = ({ params }: any) => {
                     </Box>
                 </Box>
 
-                <Heading size='xl' color="secondary">{ blog?.title }</Heading>
+                <Heading size='xl' fontFamily="body" mt={6} >{ blog?.title }</Heading>
 
                 <Box w="full" h={["250px","300px","400px","500px"]} borderRadius="md" overflow="hidden">
                     <img src={ blog?.imageUrl } 
@@ -49,7 +42,7 @@ const BlogPage = ({ params }: any) => {
                     />
                 </Box>
 
-                <Text fontSize="lg" color="secondary">{ blog?.description }</Text>
+                <Text fontSize="xl" >{ blog?.description }</Text>
             </Box>
         </Box>
     )

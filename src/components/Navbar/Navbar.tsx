@@ -1,7 +1,9 @@
 "use client"
 import { AddIcon, PhoneIcon, Search2Icon } from "@chakra-ui/icons"
-import { Avatar, Box, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react"
+import { Avatar, Box, Button, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react"
 import Link from "next/link";
+import { Settings } from "./Settings";
+import { useState } from "react";
 
 interface INavbar {
     onOpen?: () => void;
@@ -9,7 +11,7 @@ interface INavbar {
 }
 
 export const Navbar = ({ onOpen, flag }: INavbar) => {
-    
+
     return (
         <Box bgColor="secondary" px={10} py={4} boxShadow="xl"
             display="flex" justifyContent="space-between"
@@ -36,9 +38,7 @@ export const Navbar = ({ onOpen, flag }: INavbar) => {
                 >
                     <AddIcon color="secondary" fontSize="15px" />
                 </Box> }
-                <Box cursor="pointer">
-                    <Avatar size='sm' bgColor="primary" />
-                </Box>
+                <Settings />
             </Box> 
         </Box>
     )

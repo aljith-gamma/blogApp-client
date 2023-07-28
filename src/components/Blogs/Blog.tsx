@@ -1,7 +1,10 @@
 import { Box, Grid } from "@chakra-ui/react"
 import { SingleBlog } from "./SingleBlog"
-import { api } from "@/api/axios"
+import { api } from "@/apis/axios"
 import { useEffect, useState } from "react"
+import { fetchBlogs } from "@/apis/blog";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "../Loader/Loader";
 
 export interface IBlogData {
     id: number;
@@ -23,35 +26,27 @@ export interface IBlogData {
 
 export const Blog = () => {
 
-    const [blogs, setBlogs] = useState<IBlogData[]>([]);
-
-    useEffect(() => {
-        fetchBlogs();
-    }, [])
-
-    const fetchBlogs = async () => {
-        try {
-            const res: any = await api({
-                url: '/blog/all',
-                method: 'GET'
-            })
-            console.log(res.blogs);
-            setBlogs(res?.blogs);
-        } catch (err) {
-            console.log(err);
+    const { isLoading, error, data} = useQuery({
+        queryKey: ['allBlogs'],
+        queryFn: async () => {
+            const blogs = await fetchBlogs('/blog/all');
+            return blogs;
         }
-    } 
+    })
+
+    if(isLoading) return <Loader />
+    if(error) return <h1>Error...</h1>
+    
     return (
         <Grid display="grid" gap={6}
             templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)','repeat(2, 1fr)', 'repeat(3, 1fr)']} 
         >
-            {blogs[0] && (
-                blogs.map((blog) => {
-                    return (
-                        <SingleBlog key={ blog.id } { ...blog } />
-                    )
-                })
-            )}
+            
+            {data?.map((blog) => {
+                return (
+                    <SingleBlog key={ blog.id } { ...blog } />
+                )
+            })}
         </Grid>
     )
 }

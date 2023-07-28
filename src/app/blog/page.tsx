@@ -10,9 +10,9 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Box>
-    <Toaster />
+      <Toaster />
       <Navbar onOpen={ onOpen } flag={true}/>
-      <Container bgColor="primary" maxW="full" px={10} py={7}>
+      <Container bgColor="primary" maxW="full" px={10} py={7} minH="100vh">
         <Blog />
         { isOpen && <CreateBlog isOpen={ isOpen } onOpen={ onOpen } onClose={ onClose } /> }
       </Container>

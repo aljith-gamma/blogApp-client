@@ -1,28 +1,38 @@
 "use client"
-import { api } from "@/api/axios";
+import { signinUser } from "@/apis/auth";
+import { api } from "@/apis/axios";
+import Loader from "@/components/Loader/Loader";
 import { Avatar, Box, Button, Flex, Heading, Input, InputGroup, InputRightElement, Stack } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, FormEvent, useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 
-interface UserData {
+export interface UserSigninData {
     email: string;
     password: string
 }
 
 const Signin = () => {
-    const [userData, setUserData] = useState<UserData>({
+    const [userData, setUserData] = useState<UserSigninData>({
         email: '',
         password: ''
     })
 
+    const mutation = useMutation(async () => {
+        const response = await signinUser(userData);
+        if(response?.status){
+            router.push('/');
+        }
+    })
 
     const [showPassword, setShowPassword] = useState(false);
 
     const handleShowClick = () => setShowPassword(!showPassword);
 
     const router = useRouter();
+    if(localStorage.getItem('token')) router.back();
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name;
@@ -35,20 +45,10 @@ const Signin = () => {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
-        try {
-            const response = await api({ 
-                url: '/auth/signin',
-                method: 'POST',
-                data: {...userData}
-            });
-            // console.log(response);
-            if(response.status){
-                router.push('/');
-            }
-        } catch (err: any) {
-            // console.log(err?.message);
-        }
+        mutation.mutate();
     }
+
+    if(mutation.isLoading) return <Loader />
 
     return (
         <>

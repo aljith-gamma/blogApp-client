@@ -3,6 +3,9 @@
 import { CacheProvider } from '@chakra-ui/next-js'
 import { ChakraProvider } from '@chakra-ui/react'
 import { theme } from './theme'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient();
 
 export function Providers({ 
     children 
@@ -12,7 +15,9 @@ export function Providers({
   return (
     <CacheProvider>
       <ChakraProvider theme={theme}>
-        {children}
+        <QueryClientProvider client={ queryClient }>
+            { children }
+        </QueryClientProvider>
       </ChakraProvider>
     </CacheProvider>
   )

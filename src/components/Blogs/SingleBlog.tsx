@@ -18,7 +18,7 @@ export const SingleBlog = (props: IBlogData) => {
         <Box display="flex" flexDir="column" gap={4} boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px"
           p={5} borderRadius="xl" bgColor="secondary" cursor="pointer" onClick={ redirect }
         >
-          <Box w="full" height={["200px", "250px","300px"]}>
+          <Box w="full" height={["200px", "200px", "200px", "300px"]}>
             <img src={ imageUrl }
                 style={{ width: '100%', height: '100%', objectFit: 'cover'}}
             />

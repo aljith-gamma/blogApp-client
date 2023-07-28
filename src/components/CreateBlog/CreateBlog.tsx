@@ -2,7 +2,8 @@ import { Box, Button, FormControl, FormLabel, HStack, Input, Modal, ModalBody, M
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 import toast, { Toaster } from 'react-hot-toast';
 import { SingleTag } from "./SingleTag";
-import { api } from "@/api/axios";
+import { createBlog, fetchCategories } from "@/apis/blog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ICreateBlog {
     isOpen: boolean;
@@ -33,24 +34,29 @@ export const CreateBlog = ({ isOpen, onOpen, onClose}: ICreateBlog) => {
     const [categories, setCategories] = useState<ICategory[]>([]);
 
     const initialRef = useRef(null);
-
+    
     useEffect(() => {
-        fetchCategories();
+        getCategories();
     }, [])
-
-    const fetchCategories = async () => {
-        try {
-            const res: any = await api({
-                url: '/blog/categories',
-                method: 'GET'
-            })
-            if(res?.categories){
-                setCategories(res.categories);
-            }
-        } catch (err) {
-            console.log(err);
+    
+    const queryClient = useQueryClient();
+    const mutation = useMutation(async (formData: FormData) => {
+        const response = await createBlog(formData);
+        onClose();
+    },{
+        onSuccess: async (res) => {
+            await queryClient.invalidateQueries({
+                queryKey: ['allBlogs']
+            });
         }
+    })
+
+    
+    const getCategories = async () => {
+        const res: ICategory[] = await fetchCategories();
+        setCategories(res);
     }
+    
 
     const imageFileHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setFile(e?.currentTarget?.files && e.currentTarget.files[0]);
@@ -93,24 +99,14 @@ export const CreateBlog = ({ isOpen, onOpen, onClose}: ICreateBlog) => {
             toast.error('Image field is mandatory!');
             return;
         }
-        try {
-            const formData = new FormData();
-            formData.append('title', blogData.title);
-            formData.append('description', blogData.description);
-            formData.append('categoryId', blogData.categoryId);
-            formData.append('tags', JSON.stringify(tags));
-            formData.append('file', file);
+        const formData = new FormData();
+        formData.append('title', blogData.title);
+        formData.append('description', blogData.description);
+        formData.append('categoryId', blogData.categoryId);
+        formData.append('tags', JSON.stringify(tags));
+        formData.append('file', file);
 
-            const response = await api({
-                url: '/blog/create',
-                method: 'POST',
-                data: formData
-            });
-            onClose();
-            // console.log(response);
-        } catch (err) {
-            console.log(err);
-        }
+        mutation.mutate(formData);
     }
   
     return (
@@ -125,7 +121,7 @@ export const CreateBlog = ({ isOpen, onOpen, onClose}: ICreateBlog) => {
                 borderRadius="2xl" mx={5}
             >
                 <form onSubmit={ submitFormHandler }>
-                    <ModalHeader>Create your blog</ModalHeader>
+                    <ModalHeader>Create blog</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6} display="flex" flexDir="column" gap={4}>
                         <FormControl>
@@ -147,7 +143,7 @@ export const CreateBlog = ({ isOpen, onOpen, onClose}: ICreateBlog) => {
                                             style={{ width: '30px'}}
                                         />
                                         <Text fontSize="14px">Add image</Text>
-                                        {/* <Text>{ file?.name.substring(0, 15) }</Text> */}
+                                        <Text>{ file?.name.substring(0, 15) }</Text>
                                     </Box>
                                 </label>
                             </Box>

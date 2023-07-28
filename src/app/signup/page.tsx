@@ -1,12 +1,15 @@
 "use client"
-import { api } from "@/api/axios";
+import { api } from "@/apis/axios";
 import { Avatar, Box, Button, Flex, FormControl, FormHelperText, Heading, Input, InputGroup, InputLeftElement, InputRightElement, Stack } from "@chakra-ui/react";
 import Link from "next/link";
 import { ChangeEvent, FormEvent, FormEventHandler, use, useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { signupUser } from "@/apis/auth";
+import { useMutation } from "@tanstack/react-query";
+import Loader from "@/components/Loader/Loader";
 
-interface UserData {
+export interface UserSignupData {
     userName: string;
     email: string;
     password: string;
@@ -17,7 +20,7 @@ const Signup = () => {
 
     const [showPassword1, setShowPassword1] = useState(false);
     const [showPassword2, setShowPassword2] = useState(false);
-    const [userData, setUserData] = useState<UserData>({
+    const [userData, setUserData] = useState<UserSignupData>({
         userName: '',
         email: '',
         password: '',
@@ -25,9 +28,21 @@ const Signup = () => {
     })
 
     const router = useRouter();
+    if(localStorage.getItem('token')) router.back();
 
     const handleShowClick1 = () => setShowPassword1(!showPassword1);
     const handleShowClick2 = () => setShowPassword2(!showPassword2);
+
+    const mutation = useMutation(async () => {
+        if(userData.password === userData.confirmPassword){
+            const response = await signupUser(userData);
+            if(response?.status){
+                router.push('/');
+            }
+        }else {
+            toast.error('Password not match!')
+        }
+    })
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -47,25 +62,11 @@ const Signup = () => {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(userData.password === userData.confirmPassword){
-            try {
-                const response = await api({
-                    url: '/auth/signup',
-                    method: 'POST',
-                    data: {...userData}
-                })
-                console.log(response);
-                if(response?.status){
-                    router.push('/');
-                }
-            } catch (err: any) {
-                console.log(err?.message);
-            }
-        }else {
-            toast.error('Password not match!')
-        }
+        mutation.mutate();
     }
 
+    if(mutation.isLoading) return <Loader />
+    
     return (
         <>
             <Toaster />

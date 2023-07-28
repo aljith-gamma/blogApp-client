@@ -33,7 +33,7 @@ api.interceptors.response.use(handleSuccess, handleError);
 
 api.interceptors.request.use((config) => {
 
-    if (config?.url?.includes('/blog')){
+    if (config?.url?.includes('/blog') || config?.url?.includes('/profile')){
         config.headers['Content-Type'] = 'multipart/form-data';
     }
 
