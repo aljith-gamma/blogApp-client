@@ -14,6 +14,7 @@ export interface IBlogData {
     createdAt: string;
     category: {
         category: string;
+        id: number;
     },
     user: {
         id: number;
@@ -21,7 +22,8 @@ export interface IBlogData {
         profile: {
             avatarUrl: string | null;
         } | null
-    }
+    },
+    tags: string[]
 }
 
 export const Blog = () => {

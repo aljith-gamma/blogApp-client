@@ -37,7 +37,7 @@ const Signup = () => {
         if(userData.password === userData.confirmPassword){
             const response = await signupUser(userData);
             if(response?.status){
-                router.push('/');
+                router.push('/blog');
             }
         }else {
             toast.error('Password not match!')
@@ -85,11 +85,11 @@ const Signup = () => {
                     mb="2"
                     justifyContent="center"
                     alignItems="center"
-                    bgColor="secondary"
+                    bgColor="primary"
                     py={6}
                     px={[6, 8]}
                     borderRadius="2xl"
-                    boxShadow="xl"
+                    boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px"
                 >
                     <Heading color="primary" mb={2}>Sign Up</Heading>
                     <Box minW={{ base: "100%", md: "468px" }}>
@@ -157,7 +157,7 @@ const Signup = () => {
                 </Stack>
                 <Box >
                     Already have an account?{" "}
-                    <Link href="/signin">
+                    <Link href="/signin" style={{ color: 'blue'}}>
                         Sign in
                     </Link>
                 </Box>

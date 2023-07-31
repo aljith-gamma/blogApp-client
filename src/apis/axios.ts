@@ -24,7 +24,9 @@ const handleError = (err: AxiosError) => {
 
 const handleSuccess = (res: AxiosResponse) => {
     const token = res?.data?.token;
+    const _id = res?.data?._id;
     if(token) localStorage.setItem('token', token);
+    if(_id) localStorage.setItem('_id', _id);
     if(res?.data?.message) toast.success(res.data.message);
     return res.data;
 };

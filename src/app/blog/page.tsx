@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <Box>
+    <Box bgColor="F9F9F9">
       <Toaster />
       <Navbar onOpen={ onOpen } flag={true}/>
       <Container bgColor="primary" maxW="full" px={10} py={7} minH="100vh">

@@ -1,5 +1,5 @@
 import { updateProfileData } from "@/apis/profile";
-import { IProfileData } from "@/app/profile/page";
+import { IProfileData } from "@/app/profile/[id]/page";
 import { Box, Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
@@ -112,7 +112,7 @@ export const EditProfile = ({ isOpen, onOpen, onClose, firstName, lastName, user
                             />
                             <label htmlFor="avatar" style={{ cursor: 'pointer'}}>
                                 <Box display="flex" alignItems="center" gap="10px">
-                                    <img src="./upload-img.png" alt="add avatar"
+                                    <img src="../upload-img.png" alt="add avatar"
                                         style={{ width: '30px'}}
                                     />
                                     <Text fontSize="14px">Add avatar</Text>

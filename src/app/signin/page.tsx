@@ -23,7 +23,7 @@ const Signin = () => {
     const mutation = useMutation(async () => {
         const response = await signinUser(userData);
         if(response?.status){
-            router.push('/');
+            router.push('/blog');
         }
     })
 
@@ -66,11 +66,11 @@ const Signin = () => {
                     mb="2"
                     justifyContent="center"
                     alignItems="center"
-                    bgColor="secondary"
+                    bgColor="primary"
                     py={6}
                     px={[6, 8]}
                     borderRadius="2xl"
-                    boxShadow="xl"
+                    boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px"
                 >
                     <Heading color="primary" mb={2}>Sign In</Heading>
                     <Box minW={{ base: "90%", md: "468px" }}>
@@ -119,7 +119,7 @@ const Signin = () => {
                 </Stack>
                 <Box>
                     New to us?{" "}
-                    <Link href="/signup">
+                    <Link href="/signup" style={{ color: 'blue'}}>
                         Sign up
                     </Link>
                 </Box>

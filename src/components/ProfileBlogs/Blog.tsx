@@ -6,9 +6,10 @@ import { ProfileSettings } from "./ProfileSettings";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteBlog } from "@/apis/blog";
 
-export const Blog = ({ title, description, imageUrl, category, createdAt, id  } : IBlogData) => {
+export const Blog = ({ title, description, imageUrl, category, createdAt, id, user: { id : userId}, tags  } : IBlogData) => {
 
     const router = useRouter();
+    const _id = localStorage.getItem('_id') && Number(localStorage.getItem('_id'));
 
     const queryClient = useQueryClient();
 
@@ -21,7 +22,7 @@ export const Blog = ({ title, description, imageUrl, category, createdAt, id  } 
     })
 
     const redirect = () => {
-        router.push(`blog/${id}`);
+        router.push(`/blog/${id}`);
     }
 
     const removeBlog = () => {
@@ -43,11 +44,13 @@ export const Blog = ({ title, description, imageUrl, category, createdAt, id  } 
                     <Box w={["100%", "130px"]} h={["150px", "130px"]} >
                         <img src={ imageUrl } style={{ width: '100%', height: '100%', objectFit: 'cover'}} />
                     </Box>
-                    <Box onClick={(e) => e.stopPropagation()}
+                    { userId === _id && <Box onClick={(e) => e.stopPropagation()}
                         pos={["static", "static", "relative"]} top={-2} right={-5}
                     >
-                        <ProfileSettings deleteBlog={ removeBlog } />
-                    </Box>
+                        <ProfileSettings deleteBlog={ removeBlog } title={title} description={description}  imageUrl={imageUrl}
+                            tags={tags} categoryId={String(category.id)} blogId={id}
+                        />
+                    </Box> }
                 </Box>
             </Box>
 

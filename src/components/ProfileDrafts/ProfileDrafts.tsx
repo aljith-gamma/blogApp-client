@@ -1,29 +1,26 @@
 import { Box, Spinner } from "@chakra-ui/react"
-import { useEffect, useState } from "react";
 import { IBlogData } from "../Blogs/Blog";
 import { fetchBlogs } from "@/apis/blog";
+import { useQuery } from "@tanstack/react-query";
 
 export const ProfileDrafts = () => {
-    const [blogs, setblogs] = useState<IBlogData[]>([]);
-    const [load, setLoad] = useState(true);
 
-    useEffect(() => {
-        fetchDraftBlogs();
-    }, [])
-
-    const fetchDraftBlogs = async () => {
-        try {
-            const drafts: any = await fetchBlogs('/blog/all?get=mine&status=drafts');
-            setLoad(false);
-            setblogs(drafts);
-        } catch (error) {
-            console.log(error);
+    const  {isLoading, error, data} = useQuery<IBlogData[]>({
+        queryKey: ['profileDrafts'],
+        queryFn: async () => {
+            const _id = Number(localStorage.getItem('_id'));
+            if(!_id){
+                return [] as IBlogData[];
+            }
+            const drafts: any = await fetchBlogs(`/blog/get?userId=${_id}&status=drafts`);
+            return drafts as IBlogData[];
         }
-    }
+    })
 
+    if(isLoading) return <Spinner />
     return (
         <Box display="flex" flexDir="column" justifyContent="center" alignItems="center" minH="60vh">
-            { blogs[0] ? <h1>Drafts</h1> : load ? <Spinner /> : <h1>No Drafts!</h1>}
+            { data && data[0] ? <h1>Drafts</h1> : <h1>No Drafts!</h1>}
         </Box>
     )
 }

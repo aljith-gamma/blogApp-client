@@ -28,6 +28,20 @@ export const createBlog = async (formData: FormData) => {
     }
 }
 
+export const updateBlog = async (formData: FormData, blogId: number) => {
+    try {
+        const response = await api({
+            url: `/blog/${blogId}`,
+            method: 'PATCH',
+            data: formData
+        });
+        // console.log(response);
+        return response;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export const fetchSingleBlog = async (blogId: number) => {
     try {
         const response: any = await api({

@@ -1,13 +1,14 @@
 import { api } from "./axios";
 
 
-export const fetchProfileData = async () => {
+export const fetchProfileData = async (id:number) => {
     try {
-        const res = await api({
-            url: '/profile/get',
+        const response = await api({
+            url: `/profile/${id}`,
             method: 'GET'
         })
-        return res || {};
+        // console.log(response);
+        return response || {};
     } catch (error) {
         console.log(error);
     }
