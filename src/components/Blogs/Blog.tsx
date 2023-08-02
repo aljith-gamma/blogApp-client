@@ -1,7 +1,5 @@
-import { Box, Grid } from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react"
 import { SingleBlog } from "./SingleBlog"
-import { api } from "@/apis/axios"
-import { useEffect, useState } from "react"
 import { fetchBlogs } from "@/apis/blog";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../Loader/Loader";
@@ -38,10 +36,10 @@ export const Blog = () => {
 
     if(isLoading) return <Loader />
     if(error) return <h1>Error...</h1>
-    
+    console.log(data);
     return (
-        <Grid display="grid" gap={6}
-            templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)','repeat(2, 1fr)', 'repeat(3, 1fr)']} 
+        <Box display="flex" gap={6} flexDir="column" w={["95%","90%","90%", "70%"]}
+            mx="auto"
         >
             
             {data?.map((blog) => {
@@ -49,6 +47,6 @@ export const Blog = () => {
                     <SingleBlog key={ blog.id } { ...blog } />
                 )
             })}
-        </Grid>
+        </Box>
     )
 }

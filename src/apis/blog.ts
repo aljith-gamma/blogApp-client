@@ -15,6 +15,20 @@ export const fetchBlogs = async (url: string): Promise<IBlogData[]> => {
     }
 } 
 
+export const uploadImages = async (formData: FormData) => {
+    try {
+        const response = await api({
+            url: '/blog/upload',
+            method: 'POST',
+            data: formData
+        });
+        // console.log(response);
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export const createBlog = async (formData: FormData) => {
     try {
         const response = await api({
@@ -62,7 +76,7 @@ export const fetchCategories = async () => {
             method: 'GET'
         })
         // console.log(response);
-        return response.categories;
+        return response.categories || [];
     } catch (err) {
         console.log(err);
     } 

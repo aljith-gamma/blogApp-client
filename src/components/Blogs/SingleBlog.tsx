@@ -15,28 +15,32 @@ export const SingleBlog = (props: IBlogData) => {
     }
 
     return (
-        <Box display="flex" flexDir="column" gap={4} boxShadow="rgba(0, 0, 0, 0.35) 0px 5px 15px"
-          p={5} borderRadius="xl" bgColor="primary" cursor="pointer" onClick={ redirect }
+        <Box display="grid" gridTemplateColumns="3fr 1fr" transition=".2s ease-in-out" _hover={{ bgColor: 'gray.200'}}
+          p={5} borderRadius="xl" bgColor="primary" cursor="pointer" onClick={ redirect } gap={3}
         >
-          <Box w="full" height={["200px", "200px", "200px", "300px"]}>
-            <img src={ imageUrl }
-                style={{ width: '100%', height: '100%', objectFit: 'cover'}}
-            />
+          <Box display="flex" flexDir="column" gap={4}>
+            <Box display="flex" alignItems="center" gap={2} ml={1}>
+              <Avatar size="xs" name={userName} src={ avatarUrl ? avatarUrl : undefined } />
+              <Text fontSize="sm" fontWeight="500" onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/profile/${userId}`)
+              }}>{ userName }</Text>
+              <Text fontSize="sm" color="gray.600"> { moment(createdAt).fromNow() }</Text>
+            </Box>
+
+            <Box>
+              <Heading fontSize="h2">{ title.length >= 70 ? title.slice(0, 70) + "..": title.slice(0, 70) }</Heading>
+              <Text fontSize="medium" fontWeight="300" color="black" mt={2}
+              >{ description.length >= 280 ? description.slice(0, 280) + ".." : description.slice(0, 280) }.</Text>
+            </Box>
           </Box>
 
-          <Box display="flex" alignItems="center" gap={2}>
-            <Avatar size="xs" name={userName} src={ avatarUrl ? avatarUrl : undefined } />
-            <Text fontSize="sm" fontWeight="500" onClick={(e) => {
-              e.stopPropagation();
-              router.push(`/profile/${userId}`)
-            }}>{ userName }</Text>
-            <Text fontSize="sm" color="gray"> { moment(createdAt).fromNow() }</Text>
-          </Box>
-
-          <Box>
-            <Heading fontSize="h2">{ title.length >= 45 ? title.slice(0, 45) + "..": title.slice(0, 45) }</Heading>
-            <Text fontSize="medium" fontWeight="500" color="gray.500" mt={2}
-            >{ description.length >= 80 ? description.slice(0, 80) + ".." : description.slice(0, 80) }.</Text>
+          <Box display="flex" justifyContent="center">
+            <Box w={["200px", "200px", "200px", "150px"]} height={["200px", "200px", "200px", "150px"]}>
+              <img src={ imageUrl }
+                  style={{ width: '100%', height: '100%', objectFit: 'cover'}}
+                  />
+            </Box>
           </Box>
         </Box>
     )

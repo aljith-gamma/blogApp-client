@@ -1,8 +1,9 @@
 "use client"
-import { AddIcon, PhoneIcon, Search2Icon } from "@chakra-ui/icons"
-import { Avatar, Box, Button, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react"
+import { AddIcon, Search2Icon } from "@chakra-ui/icons"
+import { Avatar, Box, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react"
 import Link from "next/link";
 import { Settings } from "./Settings";
+import { useRouter } from "next/navigation";
 
 interface INavbar {
     onOpen?: () => void;
@@ -10,6 +11,7 @@ interface INavbar {
 }
 
 export const Navbar = ({ onOpen, flag }: INavbar) => {
+    const router = useRouter();
 
     return (
         <Box  px={10} py={4} boxShadow="shadow" borderBottom="1px solid rgba(0, 0, 0, 0.1)"
@@ -33,7 +35,7 @@ export const Navbar = ({ onOpen, flag }: INavbar) => {
 
                 { flag && <Box bgColor="blue.500" w="45px" height="33px" borderRadius="50%"
                     display="flex" justifyContent="center" alignItems="center"
-                    cursor="pointer" boxShadow="xl" onClick={ onOpen }
+                    cursor="pointer" boxShadow="xl" onClick={ () => router.push('/edit') }
                 >
                     <AddIcon color="primary" fontSize="15px" />
                 </Box> }

@@ -14,8 +14,10 @@ const handleError = (err: AxiosError) => {
     const data: any = err?.response?.data;
   
     // Logout
-    if (String(err?.response?.statusText) === 'Unauthorized') {
+    const statusText = String(err?.response?.statusText);
+    if (statusText === 'Unauthorized' || statusText === 'Forbidden') {
         localStorage.removeItem('token')
+        localStorage.removeItem('_id');
     }
     toast.error(data.message);
     return Promise.reject(data);
@@ -35,7 +37,7 @@ api.interceptors.response.use(handleSuccess, handleError);
 
 api.interceptors.request.use((config) => {
 
-    if (config?.url?.includes('/blog') || config?.url?.includes('/profile')){
+    if (config?.url?.includes('/blog/upload') || config?.url?.includes('/profile')){
         config.headers['Content-Type'] = 'multipart/form-data';
     }
 
