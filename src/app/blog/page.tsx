@@ -1,6 +1,5 @@
 "use client"
 
-import { BlogEditor } from "@/components/BlogEditor/BlogEditor";
 import { Blog } from "@/components/Blogs/Blog";
 import { CreateBlog } from "@/components/CreateBlog/CreateBlog";
 import { Navbar } from "@/components/Navbar/Navbar";
@@ -17,7 +16,6 @@ export default function Home() {
         <Blog />
         { isOpen && <CreateBlog isOpen={ isOpen } onOpen={ onOpen } onClose={ onClose } /> }
       </Container>
-      {/* <BlogEditor code="<h1>Hello</h1>" /> */}
     </Box>
   )
 }

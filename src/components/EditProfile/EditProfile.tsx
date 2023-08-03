@@ -85,14 +85,14 @@ export const EditProfile = ({ isOpen, onOpen, onClose, firstName, lastName, user
                         <Box display="grid" gridTemplateColumns={["1 fr", "1fr 1fr"]} gap={5}>
                             <FormControl>
                                 <FormLabel>First name</FormLabel>
-                                <Input ref={initialRef} placeholder='First name' focusBorderColor="primary" required
+                                <Input ref={initialRef} placeholder='First name' required
                                     name="firstName" onChange={ handleInputChange } value={profileData.firstName}
                                 />
                             </FormControl>
 
                             <FormControl>
                                 <FormLabel>Last name</FormLabel>
-                                <Input placeholder='Last name' focusBorderColor="primary" required
+                                <Input placeholder='Last name' required
                                     name="lastName" onChange={ handleInputChange } value={profileData.lastName}
                                 />
                             </FormControl>
@@ -100,7 +100,7 @@ export const EditProfile = ({ isOpen, onOpen, onClose, firstName, lastName, user
 
                         <FormControl>
                             <FormLabel>User name</FormLabel>
-                            <Input placeholder='User name' focusBorderColor="primary" required
+                            <Input placeholder='User name' required
                                 name="userName" onChange={ handleInputChange } value={profileData.userName}
                             />
                         </FormControl>
@@ -113,7 +113,7 @@ export const EditProfile = ({ isOpen, onOpen, onClose, firstName, lastName, user
                             <label htmlFor="avatar" style={{ cursor: 'pointer'}}>
                                 <Box display="flex" alignItems="center" gap="10px">
                                     <img src="../upload-img.png" alt="add avatar"
-                                        style={{ width: '30px'}}
+                                        style={{ width: '30px', margin: '0px'}}
                                     />
                                     <Text fontSize="14px">Add avatar</Text>
                                     { avatarUrl && !avatar ? (<Box w="50px" h="50px">
@@ -125,7 +125,7 @@ export const EditProfile = ({ isOpen, onOpen, onClose, firstName, lastName, user
 
                         <FormControl >
                             <FormLabel>Bio</FormLabel>
-                            <Textarea placeholder='Write you bio here...' focusBorderColor="primary" required
+                            <Textarea placeholder='Write you bio here...' required
                                 name="bio" value={profileData.bio} onChange={ handleInputChange }
                             />
                         </FormControl>

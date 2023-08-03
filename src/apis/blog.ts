@@ -1,7 +1,8 @@
 import { IBlogData } from "@/components/Blogs/Blog";
 import { api } from "./axios";
+import { IFetchResponse } from "@/hooks/hooks";
 
-export const fetchBlogs = async (url: string): Promise<IBlogData[]> => {
+export const fetchBlogs = async (url: string): Promise<IFetchResponse> => {
     try {
         const response: any = await api({
             url,
@@ -11,7 +12,10 @@ export const fetchBlogs = async (url: string): Promise<IBlogData[]> => {
         return response.blogs || [];
     } catch (err) {
         console.log({err});
-        return [];
+        return {
+            blogs: [],
+            skip: 0
+        };
     }
 } 
 
@@ -56,10 +60,11 @@ export const updateBlog = async (formData: FormData, blogId: number) => {
     }
 }
 
-export const fetchSingleBlog = async (blogId: number) => {
+export const fetchSingleBlog = async (blogId: number, check?: boolean) => {
     try {
+        const url = check ? `/blog/getblog/${blogId}?check=1` : `/blog/getblog/${blogId}`;
         const response: any = await api({
-            url: `/blog/getblog/${blogId}`,
+            url: url,
             method: 'GET'
         })
         // console.log(response.blog);

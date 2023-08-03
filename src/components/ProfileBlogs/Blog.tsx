@@ -41,15 +41,11 @@ export const Blog = ({ title, description, imageUrl, category, createdAt, id, us
                 </Box>
 
                 <Box display="flex" gap={2} order={[1, 2]}>
-                    <Box w={["100%", "130px"]} h={["150px", "130px"]} >
+                    <Box w={["100%", "130px"]} h={["150px", "130px"]} alignSelf="flex-end">
                         <img src={ imageUrl } style={{ width: '100%', height: '100%', objectFit: 'cover'}} />
                     </Box>
-                    { userId === _id && <Box onClick={(e) => e.stopPropagation()}
-                        pos={["static", "static", "relative"]} top={-2} right={-5}
-                    >
-                        <ProfileSettings deleteBlog={ removeBlog } title={title} description={description}  imageUrl={imageUrl}
-                            tags={tags} categoryId={String(category.id)} blogId={id}
-                        />
+                    { userId === _id && <Box onClick={(e) => e.stopPropagation()} >
+                        <ProfileSettings deleteBlog={ removeBlog }  blogId={id}/>
                     </Box> }
                 </Box>
             </Box>

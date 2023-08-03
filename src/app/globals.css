@@ -1,0 +1,34 @@
+
+body,
+h1, h2, h3, h4, h5, h6,
+p,
+ul, ol,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Customize h1, h2, p, etc. */
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+p, li {
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+img{
+    max-width: 100%;
+    width: 100%;
+    object-fit: cover;
+    margin: auto;
+    height: auto;
+    display: block;
+}

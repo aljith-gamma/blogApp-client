@@ -4,7 +4,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 
 interface ICategories {
     categoryId: number | string;
-    handleChange: (id: number) => void;
+    handleChange: (id: string) => void;
 }
 
 interface ICategory {
@@ -26,7 +26,7 @@ export const Categories = ({ categoryId, handleChange }: ICategories) => {
 
     const handleChangeId = (e: ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
-        handleChange(+value);
+        handleChange(String(value));
     }
 
     return(

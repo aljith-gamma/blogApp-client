@@ -30,7 +30,7 @@ export const Tags = ({ tagsData, addTags, removeTagHandler }: ITags) => {
                 <Box display="flex">
                     <Input placeholder='Enter tags'  
                         value={tagText} 
-                        onChange={ tagsHandler} focusBorderColor="primary"
+                        onChange={ tagsHandler} 
                         borderRight="none" borderTopRightRadius={0} borderBottomRightRadius={0}
                     />
                     <Button colorScheme="green" borderBottomLeftRadius={0}

@@ -1,14 +1,14 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Spinner, Text } from "@chakra-ui/react"
 import { SingleBlog } from "./SingleBlog"
-import { fetchBlogs } from "@/apis/blog";
-import { useQuery } from "@tanstack/react-query";
-import Loader from "../Loader/Loader";
+import InfiniteScroll from "react-infinite-scroll-component";
+import useBlogs from "@/hooks/hooks";
 
 export interface IBlogData {
     id: number;
     title: string;
     description: string;
     imageUrl: string;
+    readTime: string;
     createdAt: string;
     category: {
         category: string;
@@ -24,29 +24,36 @@ export interface IBlogData {
     tags: string[]
 }
 
+const END_MESSAGE= <Text textAlign="center" py={3}>No more blogs!</Text>
+
+const LOADING = <Box display="flex" justifyContent="center" py={3}><Spinner /></Box>
+
 export const Blog = () => {
 
-    const { isLoading, error, data} = useQuery({
-        queryKey: ['allBlogs'],
-        queryFn: async () => {
-            const blogs = await fetchBlogs('/blog/all');
-            return blogs;
-        }
-    })
+    const { data, fetchNextPage, hasNextPage } = useBlogs();
 
-    if(isLoading) return <Loader />
-    if(error) return <h1>Error...</h1>
-    console.log(data);
     return (
-        <Box display="flex" gap={6} flexDir="column" w={["95%","90%","90%", "70%"]}
+        <Box display="flex" gap={6} flexDir="column" w={["100%","90%","90%", "70%"]}
             mx="auto"
         >
-            
-            {data?.map((blog) => {
-                return (
-                    <SingleBlog key={ blog.id } { ...blog } />
-                )
-            })}
+            <InfiniteScroll
+                next={fetchNextPage}
+                hasMore={hasNextPage || false}
+                loader={ LOADING }
+                dataLength={
+                data?.pages?.reduce((total, page) => total + page.length, 0) || 0
+                }
+                endMessage={ END_MESSAGE }
+            >
+                {data?.pages.map((page) => {
+                    return page.map((blog) => {
+                        return (
+                            <SingleBlog key={ blog.id } { ...blog } />
+                        )
+                    })
+                })}
+
+            </InfiniteScroll>
         </Box>
     )
 }

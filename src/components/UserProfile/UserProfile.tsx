@@ -13,7 +13,7 @@ export const UserProfile = ({
     avatarUrl, firstName, lastName, userName, onOpen, bio, followersCount, id
 } : Partial<UserProfile>) => {
     return (
-        <Box w={["90%", "80%", "80%", "80%"]} mx="auto" py={8}>
+        <Box w={["90%", "80%"]} mx="auto" py={8}>
                 <Box display="grid" gridTemplateColumns={["1fr", "1fr", "1fr", "1fr 3fr"]} gap={4}
                     justifyContent="center"
                 >
