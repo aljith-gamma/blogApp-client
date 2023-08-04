@@ -195,6 +195,12 @@ export const BlogEditor = ( { code, btnName, categoryId, title, description, tag
             })
     
             const response: any = await uploadImages(formData);
+            if(!response) {
+                setLoad(false);
+                toast.error('No response from the server!');
+                return;
+            }
+
             response.forEach((item: IImageData) => {
                 const imgTag: any = doc.getElementById(item.id);
                 if( imgTag ) imgTag.src = item.imgUrl;

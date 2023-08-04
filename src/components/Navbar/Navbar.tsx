@@ -1,17 +1,24 @@
 "use client"
 import { AddIcon, Search2Icon } from "@chakra-ui/icons"
-import { Avatar, Box, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react"
+import { Box, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react"
 import Link from "next/link";
 import { Settings } from "./Settings";
 import { useRouter } from "next/navigation";
+import { ChangeEvent, useState } from "react";
 
 interface INavbar {
-    onOpen?: () => void;
     flag: boolean;
+    handleChange?: (text: string) => void;
+    search?: string;
 }
 
-export const Navbar = ({ onOpen, flag }: INavbar) => {
+export const Navbar = ({ flag, handleChange, search }: INavbar) => {
     const router = useRouter();
+
+    const changeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+        const text = e.target.value;
+        handleChange && handleChange(text);
+    }
 
     return (
         <Box px={[5, 10]} py={4} boxShadow="shadow" borderBottom="1px solid rgba(0, 0, 0, 0.1)"
@@ -27,10 +34,10 @@ export const Navbar = ({ onOpen, flag }: INavbar) => {
                     <InputGroup display={["none", "block"]}>
                         <InputLeftElement pointerEvents='none'>
                             <Search2Icon color="primary" />
-                            </InputLeftElement>
+                        </InputLeftElement>
                         <Input type='tel' placeholder='Search' focusBorderColor='secondary' 
                             _placeholder={{ opacity: 1, color: 'black.300' }}  borderRadius="10px"
-                            border="1px solid rgba(0, 0, 0, 0.5)" 
+                            border="1px solid rgba(0, 0, 0, 0.5)" value={search || ''} onChange={ changeHandler }
                         />
                     </InputGroup>
                 )}

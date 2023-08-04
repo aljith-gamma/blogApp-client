@@ -24,13 +24,17 @@ export interface IBlogData {
     tags: string[]
 }
 
-const END_MESSAGE= <Text textAlign="center" py={3}>No more blogs!</Text>
+interface IBlog {
+    search: string;
+}
 
+const END_MESSAGE= <Text textAlign="center" py={3} pt={6}>No more blogs!</Text>
 const LOADING = <Box display="flex" justifyContent="center" py={3}><Spinner /></Box>
 
-export const Blog = () => {
 
-    const { data, fetchNextPage, hasNextPage } = useBlogs();
+export const Blog = ({ search }: IBlog) => {
+    
+    const { data, fetchNextPage, hasNextPage } = useBlogs("allBlogs", `/blog/all?q=${search}&`, true);
 
     return (
         <Box display="flex" gap={6} flexDir="column" w={["100%","90%","90%", "70%"]}
@@ -41,17 +45,19 @@ export const Blog = () => {
                 hasMore={hasNextPage || false}
                 loader={ LOADING }
                 dataLength={
-                data?.pages?.reduce((total, page) => total + page.length, 0) || 0
+                    data?.pages?.reduce((total, page) => total + page.length, 0) || 0 
                 }
                 endMessage={ END_MESSAGE }
             >
-                {data?.pages.map((page) => {
-                    return page.map((blog) => {
-                        return (
-                            <SingleBlog key={ blog.id } { ...blog } />
-                        )
+                {
+                    data?.pages.map((page) => {
+                        return page.map((blog) => {
+                            return (
+                                <SingleBlog key={ blog.id } { ...blog } />
+                            )
+                        })
                     })
-                })}
+                }
 
             </InfiniteScroll>
         </Box>

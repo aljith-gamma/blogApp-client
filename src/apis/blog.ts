@@ -1,4 +1,4 @@
-import { IBlogData } from "@/components/Blogs/Blog";
+
 import { api } from "./axios";
 import { IFetchResponse } from "@/hooks/hooks";
 

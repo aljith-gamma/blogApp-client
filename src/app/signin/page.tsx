@@ -32,7 +32,7 @@ const Signin = () => {
     const handleShowClick = () => setShowPassword(!showPassword);
 
     const router = useRouter();
-    if(localStorage.getItem('token')) router.back();
+    if(localStorage.getItem('token')) router.push('/blog'); 
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name;

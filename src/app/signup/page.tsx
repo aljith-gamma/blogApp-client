@@ -28,7 +28,7 @@ const Signup = () => {
     })
 
     const router = useRouter();
-    if(localStorage.getItem('token')) router.back();
+    if(localStorage.getItem('token')) router.push('/blog');
 
     const handleShowClick1 = () => setShowPassword1(!showPassword1);
     const handleShowClick2 = () => setShowPassword2(!showPassword2);

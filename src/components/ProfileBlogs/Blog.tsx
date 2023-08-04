@@ -6,7 +6,11 @@ import { ProfileSettings } from "./ProfileSettings";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteBlog } from "@/apis/blog";
 
-export const Blog = ({ title, description, imageUrl, category, createdAt, id, user: { id : userId}, tags  } : IBlogData) => {
+interface IBlog extends IBlogData {
+    handleFlag: () => void;
+}
+
+export const Blog = ({ title, description, imageUrl, category, createdAt, id, user: { id : userId}, tags, handleFlag  } : IBlog) => {
 
     const router = useRouter();
     const _id = localStorage.getItem('_id') && Number(localStorage.getItem('_id'));
@@ -17,7 +21,7 @@ export const Blog = ({ title, description, imageUrl, category, createdAt, id, us
         const response = await deleteBlog(id);
     },{
         onSuccess: () => {
-            queryClient.invalidateQueries(['profileBlogs']);
+            handleFlag();
         }
     })
 
