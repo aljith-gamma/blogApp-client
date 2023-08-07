@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, FormLabel, HStack, Input } from "@chakra-ui/react"
 import { ChangeEvent, useState } from "react";
-import { SingleTag } from "../CreateBlog/SingleTag";
+import { SingleTag } from "./SingleTag";
 
 interface ITags {
     tagsData: string[];

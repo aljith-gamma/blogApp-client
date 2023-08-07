@@ -10,6 +10,7 @@ export const api = axios.create({
     }
 })
 
+let toasterId: string | undefined; 
 const handleError = (err: AxiosError) => {
     const data: any = err?.response?.data;
   
@@ -19,7 +20,9 @@ const handleError = (err: AxiosError) => {
         localStorage.removeItem('token')
         localStorage.removeItem('_id');
     }
-    toast.error(data.message);
+
+    if(toasterId) toast.dismiss(toasterId);
+    toasterId = toast.error(data.message);
     return Promise.reject(data);
 };
 
@@ -29,7 +32,12 @@ const handleSuccess = (res: AxiosResponse) => {
     const _id = res?.data?._id;
     if(token) localStorage.setItem('token', token);
     if(_id) localStorage.setItem('_id', _id);
-    if(res?.data?.message) toast.success(res.data.message);
+
+    if(toasterId) toast.dismiss(toasterId);
+    
+    if(res?.data?.message) {
+        toasterId = toast.success(res.data.message);
+    }
     return res.data;
 };
 

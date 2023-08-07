@@ -6,7 +6,7 @@ interface ISingleTag {
     index: number;
 }
 
-export const SingleTag = ({tag, removeTagHandler, index}: ISingleTag) => {
+ export const SingleTag = ({tag, removeTagHandler, index}: ISingleTag) => {
     return (
         <Tag
             size='lg'

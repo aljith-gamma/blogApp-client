@@ -1,6 +1,6 @@
 "use client"
 import { api } from "@/apis/axios";
-import { Avatar, Box, Button, Flex, FormControl, FormHelperText, Heading, Input, InputGroup, InputLeftElement, InputRightElement, Stack } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, FormControl, FormHelperText, Heading, Input, InputGroup, InputLeftElement, InputRightElement, Stack, useDisclosure } from "@chakra-ui/react";
 import Link from "next/link";
 import { ChangeEvent, FormEvent, FormEventHandler, use, useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { signupUser } from "@/apis/auth";
 import { useMutation } from "@tanstack/react-query";
 import Loader from "@/components/Loader/Loader";
+import { OtpModal } from "@/components/OtpModal/OtpModal";
 
 export interface UserSignupData {
     userName: string;
@@ -18,6 +19,7 @@ export interface UserSignupData {
 
 const Signup = () => {
 
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [showPassword1, setShowPassword1] = useState(false);
     const [showPassword2, setShowPassword2] = useState(false);
     const [userData, setUserData] = useState<UserSignupData>({
@@ -37,7 +39,7 @@ const Signup = () => {
         if(userData.password === userData.confirmPassword){
             const response = await signupUser(userData);
             if(response?.status){
-                router.push('/blog');
+                onOpen();
             }
         }else {
             toast.error('Password not match!')
@@ -64,11 +66,11 @@ const Signup = () => {
         e.preventDefault();
         mutation.mutate();
     }
-
-    if(mutation.isLoading) return <Loader />
     
     return (
         <>
+            { mutation.isLoading &&  <Loader />}
+            { isOpen && <OtpModal isOpen={isOpen} onClose={onClose} email={userData.email} /> }
             <Toaster />
             <Flex
                 flexDirection="column"
